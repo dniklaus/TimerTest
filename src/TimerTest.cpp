@@ -12,8 +12,6 @@
 #include <iostream>
 using namespace std;
 
-#define DELAY(delayTime) \
-  Timer delayTimer(0, Timer::IS_NON_RECURRING, (delayTime)); while (!delayTimer.isTimerExpired())
 
 int main()
 {
@@ -43,17 +41,17 @@ int main()
 	  }
 	};
 
-  new Timer(new TestTimerAdapter("Timer_1s", 1000), Timer::IS_RECURRING, 1000);
-  unsigned int timeMillis1 = UptimeInfo::tMillis();
-  DELAY(333);
-  unsigned int delayTimeMillis = UptimeInfo::tMillis() - timeMillis1;
-  if (333 == delayTimeMillis)
-  {
-    cout << "Timer_100ms start delayed by 333ms after Timer_1s start, OK" << endl;
-  }
   new Timer(new TestTimerAdapter("Timer_100ms", 100), Timer::IS_RECURRING, 100);
+  unsigned int timeMillis1 = UptimeInfo::tMillis();
+  delayAndSchedule(10333);
+  unsigned int delayTimeMillis = UptimeInfo::tMillis() - timeMillis1;
+  if (10333 == delayTimeMillis)
+  {
+    cout << "Timer_1s start delayed by 10333 ms after Timer_100ms start, OK" << endl;
+  }
+  new Timer(new TestTimerAdapter("Timer_1s", 1000), Timer::IS_RECURRING, 1000);
 
-	while (1)
+	while (UptimeInfo::tMillis() < (timeMillis1 + 12000))
 	{
 	  scheduleTimers();
 	}
